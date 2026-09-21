@@ -34,6 +34,50 @@ Scarcity converts, which is exactly why it attracts trouble.
   itself rather than only on the landing page.
 - **A real date beats "limited time".** It's more concrete and it can't drift into being false.
 
+## Writing that doesn't read as machine-written
+
+This is the difference between copy someone believes and copy they scroll past. Readers can't
+always name why a line feels generated, but they feel it, and the feeling is distrust.
+
+**The tells, in rough order of how often they appear:**
+
+- **The rule of three, everywhere.** "Faster, simpler, smarter." Three balanced items is the most
+  over-learned rhythm there is. Use two, or four, or one.
+- **"Not X — it's Y."** The antithesis pivot. Once in a campaign is a device; twice is a tic.
+- **Em-dash pivots mid-sentence**, over and over, to bolt a qualifier onto a clause that was
+  already finished.
+- **Abstract nouns where a concrete one exists.** "Streamline your operations" instead of "stop
+  retyping every job into Xero". The abstract version says nothing and could be any business.
+- **Even sentence lengths.** Generated prose tends to a steady 12–18 words a sentence. Human writing
+  lurches. A long sentence that piles on detail and then stops. Then three words.
+- **Symmetrical clauses.** "You bring the problem, we bring the fix." Neat, balanced, forgettable.
+- **Vocabulary with no owner**: elevate, journey, landscape, realm, seamless, unlock, dive in,
+  harness, navigate, in today's fast-paced world.
+- **Hedged into meaninglessness.** "Can help you potentially reduce some of the time spent."
+
+**What reads as a person wrote it:**
+
+- **Specifics only someone in the business would know.** Not "save time on admin" — "you retype
+  every job from email into ServiceM8, about fifteen a day". Real tool names, real numbers, real
+  days of the week.
+- **Uneven rhythm.** Let one line run long, then cut hard. Fragments are fine.
+- **Say one thing.** A single claim, made plainly, outperforms three hedged ones.
+- **Admit something.** "This won't suit you if…" or "we'll tell you if it won't work" buys more
+  trust than any adjective, because a machine optimising for conversion wouldn't volunteer it.
+- **Regional truth.** Australian copy says "quote", "job", "BAS", "tradie" — words that would be
+  wrong elsewhere and are therefore evidence of a real writer.
+
+**Two tests before anything renders:**
+
+1. **Read it aloud.** If you wouldn't say it to someone across a table, rewrite it. "Elevate your
+   customer journey" fails instantly; "bring the job that eats your Tuesday" survives.
+2. **Swap the business name.** If the line still makes sense for a dentist, a law firm and a
+   plumber, it says nothing about this one. Make it unswappable.
+
+Generated copy also tends to be *tidy* — every slide the same shape, every line the same length.
+Deliberate unevenness across a reel is part of what makes it feel authored, which is why the slide
+table below asks about loudness and position per slide rather than applying one treatment to all.
+
 ## Voice
 
 `brand.json` carries the voice description and the banned-word list. The general shape that works:

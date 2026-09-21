@@ -16,7 +16,9 @@
     "bodyFamily": "Public Sans",
     "googleFontsHref": "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;600&display=block",
     "displayTracking": "-0.02em",
-    "displayLineHeight": 1.05
+    "displayLineHeight": 1.05,
+    "allowDisplayCaps": false,
+    "_capsNote": "Fraunces is never set all-caps per the brand guidelines, so `shout` raises weight and size instead."
   },
   "button": {
     "radius": "0.42em 0.42em 0.42em 0.14em"

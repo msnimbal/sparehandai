@@ -99,6 +99,12 @@ for (const [i, slide] of slides.entries()) {
       fine: campaign.fine,
       mark,
       bg,
+      // Per-slide type treatment. A reel is a sequence, so varying loudness
+      // across it is what gives the cut a shape rather than five flat cards.
+      loudness: slide.loudness,
+      scale: slide.scale,
+      align: slide.align,
+      vAlign: slide.vAlign,
     }),
     { waitUntil: "networkidle" },
   );

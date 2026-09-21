@@ -73,6 +73,10 @@ for (const vk of variantKeys) {
         fine: s.banner ? "" : s.tight ? campaign.fineShort || campaign.fine : campaign.fine,
         mark: s.banner ? "" : mark,
         bg,
+        loudness: v.loudness,
+        scale: v.scale,
+        align: v.align,
+        vAlign: v.vAlign,
       }),
       { waitUntil: "networkidle" },
     );

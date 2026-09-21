@@ -18,9 +18,10 @@ and a copy change is a re-run rather than a redraw.
 
 1. **Establish the brand** — use the bundled one, or build one from the client's website.
 2. **Understand the offer** and write the copy, counted against platform limits.
-3. **Write `campaign.json`.**
-4. **Render**, look at what came out, and fix what's wrong.
-5. **Hand over** the files and say plainly what still needs a human.
+3. **Show the slide table** and get the words, position and loudness approved before rendering video.
+4. **Write `campaign.json`.**
+5. **Render**, look at what came out, and fix what's wrong.
+6. **Hand over** the files and say plainly what still needs a human.
 
 Skipping step 1 is the most common way this goes wrong: rendering with a guessed palette produces
 28 files that all have to be thrown away.
@@ -60,8 +61,14 @@ Ask for whatever isn't already clear: what the thing is, the date and place, wha
 what happens after they click, whether there's a limit, and where the traffic lands.
 
 Then read **`references/copy-rules.md`** before writing a word. It covers the claims that are legal
-matters rather than taste, how to do scarcity without making a promise the click can't keep, and why
-the CTA should reuse the landing page's exact words.
+matters rather than taste, how to do scarcity without making a promise the click can't keep, why the
+CTA should reuse the landing page's exact words, and — the section to read twice — how to write
+lines that don't read as machine-written.
+
+That last part decides whether the ad is believed. The tells are structural rather than lexical:
+three balanced items, "not X — it's Y", even sentence lengths, abstract nouns where a concrete one
+exists. Two checks before anything renders: read the line aloud, and swap the business name into it.
+If it still works for a dentist and a plumber, it says nothing about this business.
 
 Read **`references/platform-specs.md`** for the character limits and count every line
 programmatically. Two characters over means truncation mid-word in the feed, and an em dash costs
@@ -70,7 +77,42 @@ more than it looks.
 Three or four headline variants, changing **one thing at a time** — layout, date, qualifying line
 and CTA stay identical, so the test measures the headline rather than everything at once.
 
-## 3. Write campaign.json
+## 3. Put the slides in a table and get them approved
+
+Before rendering the video, show the whole sequence as a table and ask what to change. Do this
+every time. A reel is the one output where the person has strong opinions they won't volunteer
+unprompted — they'll accept a static ad they're lukewarm about, but they watch a reel the way an
+audience would, and "slide three is too shouty" only surfaces when you ask.
+
+| # | Blurb | Position | Size | Emotion | Loudness |
+|---|---|---|---|---|---|
+| 1 | Bring one job. Leave it running. | centre | 1.0× | plain, confident | loud |
+| 2 | Three hours. One real fix. | left | 1.0× | matter-of-fact | quiet |
+| 3 | Ten seats. One problem each. | centre | 1.0× | scarce, unhurried | shout |
+| 4 | Not a seminar. No slides. | bottom | 1.0× | blunt | whisper |
+| 5 | 31 October, Parramatta. | centre | 1.0× | warm, inviting | normal |
+
+Ask plainly: *"Change any blurb, move anything, or make a slide louder or quieter?"*
+
+What each column does:
+
+- **Blurb** — the words. One idea per slide.
+- **Position** — `align` (`left`/`center`/`right`) and `vAlign` (`top`/`center`/`bottom`).
+- **Size** — `scale`, a multiplier on the headline. Use it for a line that needs to breathe;
+  loudness usually handles this better.
+- **Emotion** — guides the *words*, not the render. A line reads as urgent because of what it says.
+  Record what they tell you and rewrite the blurb to match; don't reach for a colour change.
+- **Loudness** — the type treatment: `whisper`, `quiet`, `normal`, `loud`, `shout`. Size, weight
+  and letter-spacing shift together; the palette never does, so a loud slide is still on-brand.
+
+**Vary it.** Five slides at identical loudness is the flattest possible cut and reads as machine-set
+even when the words are good. A whisper before a shout is what gives a reel a shape.
+
+`shout` will set the display face in caps only if the brand allows it — `fonts.allowDisplayCaps`.
+Many serif faces are drawn for mixed case and look amateurish shouted, so where it's switched off,
+`shout` raises weight and size instead.
+
+## 4. Write campaign.json
 
 Copy `examples/campaign.example.json` and edit. The shape:
 
@@ -88,7 +130,10 @@ Copy `examples/campaign.example.json` and edit. The shape:
   },
   "reel": {
     "seconds": 13, "transition": "slideleft", "xfade": 0.5,
-    "slides": [{ "headline": "One idea<br>per slide." }]
+    "slides": [
+      { "headline": "One idea<br>per slide.", "loudness": "loud" },
+      { "headline": "Quieter beat.", "sub": "Supporting line.", "loudness": "quiet", "align": "left" }
+    ]
   }
 }
 ```
@@ -101,8 +146,10 @@ Notes that save a re-render:
 - **`<br>`** controls line breaks in headlines. Use it — letting a two-line headline wrap wherever
   it lands is the difference between deliberate and accidental.
 - **`texture`** is optional. A flat ground is clean but can read as unfinished; see *Backgrounds*.
+- **Per-slide `loudness`, `scale`, `align` and `vAlign`** carry the table's decisions into the
+  render. Variants accept the same four fields, if one headline wants a different treatment.
 
-## 4. Render
+## 5. Render
 
 ```bash
 node scripts/render.mjs --campaign ./campaign.json          # all variants × all placements
@@ -164,7 +211,7 @@ in an ad for a workshop is a misleading representation, whatever the intent — 
 to synthetic people, fabricated attendees, or an AI avatar of a real person, which also carries
 disclosure obligations on most platforms.
 
-## 5. Hand over
+## 6. Hand over
 
 Say where the files are, and be direct about what a human still has to do — set up the campaigns,
 add music, confirm anything in a derived `brand.json` that was guessed rather than sampled.
