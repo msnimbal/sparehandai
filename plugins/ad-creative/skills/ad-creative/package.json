@@ -1,0 +1,9 @@
+{
+  "name": "ad-creative",
+  "private": true,
+  "type": "module",
+  "description": "Render engine for the ad-creative skill. Run `npm install` here once before first use.",
+  "dependencies": {
+    "playwright": "^1.63.0"
+  }
+}

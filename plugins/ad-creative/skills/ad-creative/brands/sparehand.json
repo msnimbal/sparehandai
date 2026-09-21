@@ -1,0 +1,64 @@
+{
+  "name": "SpareHand AI",
+  "colours": {
+    "ground": "#FBF4EA",
+    "ink": "#291812",
+    "accent": "#DD5230",
+    "body": "#6B5C52"
+  },
+  "contrast": {
+    "accentOnGround": 3.6,
+    "note": "Accent passes AA for large text, buttons and rules only. Body-size text and fine print stay ink."
+  },
+  "fonts": {
+    "displayFamily": "Fraunces",
+    "displayWeight": 600,
+    "bodyFamily": "Public Sans",
+    "googleFontsHref": "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;600&display=block",
+    "displayTracking": "-0.02em",
+    "displayLineHeight": 1.05,
+    "allowDisplayCaps": false,
+    "_capsNote": "Fraunces is never set all-caps per the brand guidelines, so `shout` raises weight and size instead."
+  },
+  "button": {
+    "radius": "0.42em 0.42em 0.42em 0.14em"
+  },
+  "logo": {
+    "markPath": "brands/assets/sparehand-mark.svg"
+  },
+  "legal": {
+    "line": "SpareHand AI, a trading name of Sri Infra Services Pty Ltd, ABN 30 670 822 045, Sydney NSW.",
+    "privacyUrl": "https://www.sparehandai.com.au/privacy"
+  },
+  "voice": {
+    "spelling": "en-AU",
+    "description": "One Australian business owner explaining the offer to another. Short sentences, concrete nouns. Name the actual task and the actual tool.",
+    "bannedWords": [
+      "unlock",
+      "leverage",
+      "empower",
+      "seamless",
+      "frictionless",
+      "game-changer",
+      "revolutionise",
+      "supercharge",
+      "cutting-edge",
+      "synergy",
+      "solutions",
+      "transform your business",
+      "next-level",
+      "effortless"
+    ]
+  },
+  "claims": {
+    "forbidden": [
+      "star ratings, review counts or aggregate rating markup",
+      "testimonials or named client claims",
+      "'trusted by' or client-roster claims",
+      "performance guarantees",
+      "implied headcount beyond what is true",
+      "competitor copy, lifted or paraphrased"
+    ],
+    "note": "These are Australian Consumer Law and platform-policy matters, not style preferences. Fabricated or implied review signals are an active ACCC enforcement priority."
+  }
+}

@@ -28,6 +28,30 @@
         "consulting"
       ],
       "strict": true
+    },
+    {
+      "name": "ad-creative",
+      "displayName": "Ad Creative",
+      "description": "Produce on-brand paid ad creative from a use case — statics for every Meta and Google placement plus a silent MP4 for Reels, Stories and Shorts, rendered from HTML so brand colour and type are exact.",
+      "version": "0.1.0",
+      "source": "./plugins/ad-creative",
+      "author": {
+        "name": "SpareHand AI"
+      },
+      "homepage": "https://github.com/msnimbal/sparehand-skills/tree/main/plugins/ad-creative",
+      "repository": "https://github.com/msnimbal/sparehand-skills",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "advertising",
+        "creative",
+        "meta-ads",
+        "google-ads",
+        "reels",
+        "brand",
+        "video"
+      ],
+      "strict": true
     }
   ]
 }
