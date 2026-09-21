@@ -1,0 +1,37 @@
+{
+  "brand": "sparehand",
+  "out": "./out",
+  "eyebrow": "31 October · Parramatta · Free",
+  "cta": "Grab your seat",
+  "fine": "Applications reviewed — we call to check fit. SpareHand AI, a trading name of Sri Infra Services Pty Ltd, ABN 30 670 822 045, Sydney NSW.",
+  "fineShort": "Applications reviewed — we call to check fit.",
+  "texture": { "file": "./texture.svg", "opacity": 0.07 },
+
+  "variants": {
+    "a": {
+      "headline": "Bring one job.<br>Leave it running.",
+      "banner": "Bring one job. Leave it running.",
+      "sub": "Ten businesses, one problem each. Three hours, no slides."
+    },
+    "b": {
+      "headline": "No slides.<br>We build your fix.",
+      "banner": "No slides. We build your fix.",
+      "sub": "Ten seats. Bring the task that eats your week and leave with it running."
+    }
+  },
+
+  "reel": {
+    "name": "free-workshop",
+    "size": "story-9x16",
+    "seconds": 13,
+    "transition": "slideleft",
+    "xfade": 0.5,
+    "slides": [
+      { "headline": "Bring one job.<br>Leave it running." },
+      { "headline": "Three hours.<br>One real fix.", "sub": "On your tools, in your accounts." },
+      { "headline": "Ten seats.<br>One problem each." },
+      { "headline": "Not a seminar.<br>No slides.", "sub": "You build it with us, on the day." },
+      { "headline": "31 October<br>Parramatta.", "sub": "Ten businesses. Applications reviewed.", "cta": "Grab your seat" }
+    ]
+  }
+}
