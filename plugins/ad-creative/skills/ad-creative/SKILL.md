@@ -221,11 +221,32 @@ If the copy or the claims depend on something you couldn't verify — a price, a
 
 ## What this needs
 
-- **Node with Playwright** — `npx playwright install chromium` if Chromium is missing.
-- **ffmpeg**, for the video only. Statics render without it; if it's absent, produce them and say
-  the reel needs `brew install ffmpeg`.
+- **Node with Playwright.** If Chromium is missing, `npx playwright install chromium`.
+- **ffmpeg — for video only.** `reel.mjs` checks before rendering any frames and prints the install
+  command for the machine it's running on. Statics never need it.
 - **Network access at render time**, for Google Fonts. To work offline, bundle the font files and
   point `fonts.googleFontsHref` at a local stylesheet.
+
+**If ffmpeg is missing, render the statics anyway.** They are most of the deliverable, and a
+missing encoder is no reason to hand over nothing. Produce them, say the reel is pending, and give
+the install command — `reel.mjs` will print the right one, so run it and relay what it says rather
+than guessing at the platform.
+
+### Windows
+
+Everything works, with three differences worth knowing before you paste a command at someone:
+
+- **`~` doesn't expand** in cmd or PowerShell. Use `$env:USERPROFILE` in PowerShell, or have them
+  `cd` into the skill folder and drop `--prefix` entirely.
+- **ffmpeg comes from winget, choco or scoop**, not brew — and a new terminal is needed afterwards,
+  because Windows only picks up PATH changes in new sessions. That's the usual reason it still
+  looks missing right after a successful install.
+- **Paths with spaces are common** on Windows (`C:\Users\First Last\...`). The scripts pass
+  arguments as arrays rather than through a shell, so they're safe — but quote them yourself when
+  typing a command for someone.
+
+Not tested on Windows. The path handling is platform-agnostic and ffmpeg detection is checked for
+all three platforms, but if something fails there, that is where to look first.
 
 ## Files
 

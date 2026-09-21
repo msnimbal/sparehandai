@@ -8,7 +8,7 @@
  */
 import { launchBrowser } from "./browser.mjs";
 import { readdirSync, readFileSync } from "fs";
-import { resolve } from "path";
+import { join, resolve } from "path";
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -31,7 +31,7 @@ const groups = {};
 for (const f of files) (groups[f.split("-")[0]] ||= []).push(f);
 
 const cell = (f) => {
-  const uri = "data:image/png;base64," + readFileSync(`${OUT}/${f}`).toString("base64");
+  const uri = "data:image/png;base64," + readFileSync(join(OUT, f)).toString("base64");
   const label = f.replace(/^[^-]+-/, "").replace(".png", "");
   return `<figure style="margin:0"><img src="${uri}" style="display:block;width:100%;border:1px solid #ddd">
     <figcaption style="font:400 11px/1.4 -apple-system,sans-serif;color:#888;padding-top:5px">${label}</figcaption></figure>`;
@@ -53,8 +53,8 @@ await page.setContent(`<body style="margin:0;padding:34px;width:1400px;backgroun
   <p style="font:400 12px/1.5 -apple-system,sans-serif;color:#888;margin:0 0 26px">
     ${files.length} creatives · ${Object.keys(groups).length} variants</p>
   ${body}</body>`);
-await page.screenshot({ path: `${OUT}/contact-sheet.png`, fullPage: true });
+await page.screenshot({ path: join(OUT, "contact-sheet.png"), fullPage: true });
 await page.close();
 await browser.close();
 
-console.log(`${OUT}/contact-sheet.png`);
+console.log(join(OUT, "contact-sheet.png"));

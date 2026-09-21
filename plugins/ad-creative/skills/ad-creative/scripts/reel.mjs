@@ -10,9 +10,10 @@
  * track cannot be swapped without re-encoding.
  */
 import { launchBrowser } from "./browser.mjs";
+import { ffmpegAvailable, ffmpegInstallHint, STATICS_STILL_WORK } from "./ffmpeg.mjs";
 import { execFileSync } from "child_process";
 import { mkdirSync, readFileSync, existsSync } from "fs";
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { html, SIZES, loadBrand, markTag, textureTag } from "./template.mjs";
 
 function arg(name, fallback) {
@@ -29,7 +30,7 @@ if (!campaignPath) {
 const campaign = JSON.parse(readFileSync(resolve(campaignPath), "utf8"));
 const brand = loadBrand(arg("brand", campaign.brand || "sparehand"));
 const OUT = resolve(arg("out", campaign.out || "./out"));
-const FRAMES = `${OUT}/.reel-frames`;
+const FRAMES = join(OUT, ".reel-frames");
 mkdirSync(FRAMES, { recursive: true });
 
 const reel = campaign.reel || {};
@@ -72,6 +73,11 @@ if (hold < 1) {
   );
 }
 
+if (!ffmpegAvailable()) {
+  console.error(`${ffmpegInstallHint()}\n\n${STATICS_STILL_WORK}`);
+  process.exit(1);
+}
+
 const mark = markTag(brand);
 let bg = "";
 if (campaign.texture?.file) {
@@ -110,7 +116,7 @@ for (const [i, slide] of slides.entries()) {
   );
   await page.evaluate(() => document.fonts.ready);
 
-  const file = `${FRAMES}/slide-${i}.png`;
+  const file = join(FRAMES, `slide-${i}.png`);
   await page.screenshot({ path: file });
   stills.push(file);
   await page.close();
@@ -130,7 +136,7 @@ for (let i = 1; i < stills.length; i++) {
 }
 filter = filter.replace(/;$/, "");
 
-const mp4 = `${OUT}/${reel.name || "reel"}-${SIZE}-${TARGET}s.mp4`;
+const mp4 = join(OUT, `${reel.name || "reel"}-${SIZE}-${TARGET}s.mp4`);
 try {
   execFileSync(
     "ffmpeg",
@@ -149,7 +155,7 @@ try {
 } catch (err) {
   const stderr = err.stderr?.toString() || "";
   if (/ENOENT/.test(err.message)) {
-    console.error("ffmpeg is not installed. `brew install ffmpeg`, or skip the reel and ship statics.");
+    console.error(`${ffmpegInstallHint()}\n\n${STATICS_STILL_WORK}`);
   } else if (/xfade/.test(stderr) && /transition/.test(stderr)) {
     console.error(`ffmpeg rejected transition "${TRANSITION}". Try slideleft, slideup, wipeleft or fade.`);
   } else {

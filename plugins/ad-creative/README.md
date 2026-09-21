@@ -22,7 +22,17 @@ npm install --prefix skills/ad-creative
 npx --prefix skills/ad-creative playwright install chromium
 ```
 
-`ffmpeg` is needed for video only — statics render without it.
+`ffmpeg` is needed for **video only** — statics render without it. `reel.mjs` checks for it before
+rendering anything and prints the install command for your platform:
+
+| | |
+|---|---|
+| macOS | `brew install ffmpeg` |
+| Windows | `winget install Gyan.FFmpeg`, then open a **new** terminal |
+| Debian/Ubuntu | `sudo apt install ffmpeg` |
+
+**On Windows**, `~` doesn't expand in cmd or PowerShell — use `$env:USERPROFILE`, or `cd` into the
+skill folder and drop `--prefix`. Everything else works; it just hasn't been tested there yet.
 
 ## Use
 

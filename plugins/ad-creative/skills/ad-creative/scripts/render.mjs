@@ -11,7 +11,7 @@
  */
 import { launchBrowser } from "./browser.mjs";
 import { mkdirSync, readFileSync, existsSync } from "fs";
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { html, SIZES, loadBrand, markTag, textureTag } from "./template.mjs";
 
 function arg(name, fallback) {
@@ -82,7 +82,7 @@ for (const vk of variantKeys) {
     );
     await page.evaluate(() => document.fonts.ready);
 
-    const file = `${OUT}/${vk}-${size}.png`;
+    const file = join(OUT, `${vk}-${size}.png`);
     await page.screenshot({ path: file });
     made.push(`${file}  ${s.w}x${s.h}`);
     await page.close();
