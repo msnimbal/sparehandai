@@ -1,0 +1,20 @@
+{
+  "name": "ad-motionify",
+  "version": "0.1.0",
+  "description": "Turn finished ad copy into motion — composite ad-creative's copy layers over real footage or procedurally generated brand-exact plates, add drift or a wet-pigment warp, and lay a synthesised bed underneath. No image or video model required.",
+  "author": {
+    "name": "SpareHand AI"
+  },
+  "homepage": "https://github.com/msnimbal/sparehandai/tree/main/plugins/ad-motionify",
+  "repository": "https://github.com/msnimbal/sparehandai",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "video",
+    "reels",
+    "motion",
+    "ffmpeg",
+    "b-roll",
+    "brand"
+  ]
+}
