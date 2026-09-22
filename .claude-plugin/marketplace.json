@@ -1,14 +1,15 @@
 {
-  "name": "sparehand-skills",
-  "version": "0.1.0",
-  "description": "Skills for consulting and client delivery work, from SpareHand AI.",
+  "name": "sparehandai",
   "owner": {
     "name": "SpareHand AI"
+  },
+  "metadata": {
+    "description": "Skills for consulting and client delivery work, from SpareHand AI.",
+    "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "requirements-to-proposal",
-      "displayName": "Requirements to Proposal",
       "description": "Turn raw client requirements — meeting notes, chat threads, voice recordings, emails, documents — into a scope document, a PDF, and matching CRM records that stay in sync through every revision.",
       "version": "0.1.0",
       "source": "./plugins/requirements-to-proposal",
@@ -26,12 +27,10 @@
         "discovery",
         "crm",
         "consulting"
-      ],
-      "strict": true
+      ]
     },
     {
       "name": "ad-creative",
-      "displayName": "Ad Creative",
       "description": "Produce on-brand paid ad creative from a use case — statics for every Meta and Google placement plus a silent MP4 for Reels, Stories and Shorts, rendered from HTML so brand colour and type are exact.",
       "version": "0.1.0",
       "source": "./plugins/ad-creative",
@@ -50,12 +49,7 @@
         "reels",
         "brand",
         "video"
-      ],
-      "strict": true
+      ]
     }
-  ],
-  "metadata": {
-    "description": "Skills for consulting and client delivery work, from SpareHand AI.",
-    "version": "0.1.0"
-  }
+  ]
 }
