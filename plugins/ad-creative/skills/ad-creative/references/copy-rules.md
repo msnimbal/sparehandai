@@ -34,6 +34,52 @@ Scarcity converts, which is exactly why it attracts trouble.
   itself rather than only on the landing page.
 - **A real date beats "limited time".** It's more concrete and it can't drift into being false.
 
+## Restricted categories
+
+Some verticals have their own rules on top of the claims above, and they are the most common cause
+of a rejection. Check before writing a word, because they shape the headline rather than the
+fine print.
+
+**The personal-attributes rule is the one that catches people.** Across Meta and Google you may not
+run creative that implies you know something about the viewer — their health, mental state, finances,
+sexuality, religion, immigration status or criminal record. The test is whether the line accuses the
+reader of being in the category.
+
+| Rejected | Allowed |
+|---|---|
+| "Feeling depressed?" | "Most people don't talk about it." |
+| "Struggling with debt?" | "Debt is more common than people admit." |
+| "Are you single and over 40?" | "A dating app built for people over 40." |
+| "Can't get approved?" | "Approval that doesn't depend on a credit score." |
+
+Second person plus a condition is the shape to avoid. Third person, or a statement about the world,
+says the same thing and passes.
+
+**By category:**
+
+- **Health and mental health.** No clinical claims, no diagnosis, no promised outcomes, no
+  before-and-after imagery. A wellbeing app is not a health service and should say so — a short
+  non-clinical disclaimer plus a local crisis number belongs in the fine print. In Australia that's
+  Lifeline 13 11 14; use the right one for the market you're running in. Some health subcategories
+  need written pre-approval before they can run at all.
+- **Finance and credit.** Rates, fees and comparison figures need to be accurate and usually need a
+  licence number on the creative. No guaranteed approval, no debt-elimination promises.
+- **Gambling.** Written permission per jurisdiction, and age-gated targeting. Assume it cannot run
+  until the platform says otherwise.
+- **Dating.** Written permission on Meta. No sexualised imagery, no implying the viewer is lonely.
+- **Employment, housing and credit** are "special ad categories" — targeting is deliberately
+  restricted (no age, gender or postcode narrowing), which changes the media plan, not just the copy.
+- **Alcohol, pharmaceuticals, political and social issues** each carry their own permissions and
+  disclaimers.
+
+**Ask which market it runs in.** These rules are jurisdictional: the same line can be fine in one
+country and a rejection in another, and the crisis number in the fine print has to be local to be
+any use.
+
+If the offer sits in one of these categories, say so plainly when handing over, and name the
+specific rule you wrote around. It is the part most likely to be edited later by someone who
+doesn't know it was deliberate.
+
 ## Writing that doesn't read as machine-written
 
 This is the difference between copy someone believes and copy they scroll past. Readers can't

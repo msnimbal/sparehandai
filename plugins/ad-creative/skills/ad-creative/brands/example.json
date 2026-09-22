@@ -1,7 +1,6 @@
 {
   "name": "Example Co",
   "_template": "Copy this, fill it in for the business being advertised, and save as brands/<name>.json or beside the campaign. Never run a real campaign against this file unchanged: the legal line is empty, and a paid ad with no identifiable advertiser is a platform-policy problem.",
-
   "colours": {
     "ground": "#FFFFFF",
     "ink": "#111111",
@@ -12,7 +11,6 @@
     "accentOnGround": null,
     "note": "Compute accent-on-ground contrast. Under 4.5:1 it is fine for large headings, buttons and rules but fails for body text and fine print, which should stay ink."
   },
-
   "fonts": {
     "displayFamily": "Playfair Display",
     "displayWeight": 600,
@@ -23,26 +21,23 @@
     "allowDisplayCaps": true,
     "_capsNote": "Set false where the display face is drawn for mixed case. `shout` then raises weight and size instead of setting caps."
   },
-
-  "button": { "radius": "0.4em" },
-
+  "button": {
+    "radius": "0.4em"
+  },
   "logo": {
     "markPath": null,
     "_note": "Path to an SVG monogram, relative to the skill root. Ask for vector — a scraped PNG falls apart at 1080px. Null renders without a mark."
   },
-
   "legal": {
     "line": null,
     "privacyUrl": null,
-    "_note": "Required for paid social: the advertiser must be identifiable. Ask for the legal entity name, its company number, and a privacy URL."
+    "_note": "May legitimately stay null. Advertiser identity on Meta and Google comes from the ad account and Page, not from a line inside the image — a sole individual with no company has nothing to print, and padding it with something invented is worse than leaving it out. Fill it in when there is a real entity, or when the category requires a specific disclaimer (a licence number, a crisis line)."
   },
-
   "voice": {
     "spelling": "en-AU",
     "description": null,
     "bannedWords": []
   },
-
   "claims": {
     "forbidden": [
       "star ratings, review counts or aggregate rating markup",

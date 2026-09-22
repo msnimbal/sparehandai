@@ -11,8 +11,9 @@
  */
 import { launchBrowser } from "./browser.mjs";
 import { mkdirSync, readFileSync, existsSync } from "fs";
-import { join, resolve } from "path";
+import { dirname, join, resolve } from "path";
 import { html, SIZES, loadBrand, markTag, textureTag } from "./template.mjs";
+import { inspectFrame, checkFrame, FrameReport } from "./verify.mjs";
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -37,7 +38,14 @@ if (!brandRef) {
   process.exit(1);
 }
 const brand = loadBrand(brandRef);
-const OUT = resolve(arg("out", campaign.out || "./out"));
+// `--out` is something the person typed just now, so it resolves against the
+// shell. `campaign.out` lives in the campaign file, so it resolves against
+// that file — otherwise running the documented command from the skill folder
+// drops the whole output set inside the skill instead of beside the job.
+const cliOut = arg("out");
+const OUT = cliOut
+  ? resolve(cliOut)
+  : resolve(dirname(resolve(campaignPath)), campaign.out || "./out");
 mkdirSync(OUT, { recursive: true });
 
 const sizes = arg("sizes", "").trim()
@@ -60,6 +68,7 @@ if (campaign.texture?.file) {
 
 const browser = await launchBrowser();
 const made = [];
+const report = new FrameReport();
 
 for (const vk of variantKeys) {
   const v = campaign.variants[vk];
@@ -92,6 +101,8 @@ for (const vk of variantKeys) {
     );
     await page.evaluate(() => document.fonts.ready);
 
+    report.add(checkFrame(await inspectFrame(page), `variant ${vk} / ${size}`));
+
     const file = join(OUT, `${vk}-${size}.png`);
     await page.screenshot({ path: file });
     made.push(`${file}  ${s.w}x${s.h}`);
@@ -101,3 +112,5 @@ for (const vk of variantKeys) {
 
 await browser.close();
 console.log(made.join("\n"));
+
+if (report.finish()) process.exit(2);

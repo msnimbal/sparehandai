@@ -69,6 +69,36 @@ so the link belongs in the first two or three lines, above the "…more" fold.
 | Description | 5000 |
 | Tags | 500 total |
 
+## How long a headline line can be
+
+Measured, not estimated: rendered with 4-letter words at default loudness, the longest headline
+that stays on one line.
+
+| Placement | Headline size | Chars per line |
+|---|---|---|
+| `story-9x16` | 132px | **~14** |
+| `disp-300x600` | 40px | ~14 |
+| `meta-1x1` | 104px | ~19 |
+| `meta-4x5` | 112px | ~19 |
+| `disp-300x250` | 30px | ~19 |
+| `disp-336x280` | 33px | ~19 |
+| `disp-728x90` | 26px | one line, never wraps |
+
+**9:16 is the binding constraint at about 14 characters.** Write to that and everything else fits.
+"Most blokes don't talk." is 23 characters and becomes a ragged two-line stack there; "Most blokes"
+plus `<br>` plus "don't talk." is deliberate.
+
+Two things move these numbers, so treat them as a guide rather than a contract:
+
+- **The typeface.** A condensed face fits noticeably more per line than a wide display serif. These
+  figures come from the bundled example brand.
+- **Loudness.** `shout` is 1.26× the base size, so it cuts the budget by roughly a fifth; `whisper`
+  buys some back.
+
+You don't have to count by hand — `render.mjs` and `reel.mjs` warn when a `<br>`-delimited segment
+wraps, naming the variant, placement and segment, so an unintended break is visible rather than
+something you find in the PNG later.
+
 ## Video encoding
 
 H.264, `yuv420p`, `+faststart`. `yuv420p` matters — other pixel formats play in a desktop player

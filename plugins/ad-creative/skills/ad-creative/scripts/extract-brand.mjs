@@ -116,8 +116,16 @@ const sample = await page.evaluate(() => {
   const heading = document.querySelector("h1, h2");
   const headingColour = heading ? rgb(getComputedStyle(heading).color) : null;
 
+  const meta = (sel) => document.querySelector(sel)?.getAttribute("content")?.trim() || null;
+  const headingText = [...document.querySelectorAll("h1,h2")].map((h) => h.textContent.trim()).join(" ");
+
   return {
     title: document.title,
+    siteName: meta('meta[property="og:site_name"]') || meta('meta[name="application-name"]'),
+    // A crawler that lands on a login wall samples the login wall. Worth saying
+    // so, because the colours will be real and the brand will not.
+    looksAuthGated: /sign ?in|log ?in|password/i.test(`${document.title} ${headingText}`),
+    finalUrl: location.href,
     pageBackground,
     headingColour,
     backgrounds: top(bgArea),
@@ -142,6 +150,40 @@ const contrast = (a, b) => {
   return Number(((hi + 0.05) / (lo + 0.05)).toFixed(2));
 };
 
+// The <title> of an auth-gated page is "Sign In", which then becomes the brand
+// name and reads as deliberate. og:site_name is authored; the apex domain is at
+// least always the right company.
+const apex = new URL(url).hostname.replace(/^www\./, "").split(".")[0];
+const brandName = sample.siteName || apex.charAt(0).toUpperCase() + apex.slice(1);
+
+const problems = [];
+const notes = [];
+
+if (sample.looksAuthGated) {
+  notes.push(
+    `The page looks auth-gated — its title or headings mention sign in / log in.\n` +
+      `   Settled on: ${sample.finalUrl}\n` +
+      `   Colours sampled from a login screen are usually not the marketing brand. ` +
+      `Try the marketing page explicitly.`,
+  );
+}
+
+const GENERIC_FAMILIES = new Set([
+  "ui-sans-serif", "ui-serif", "ui-monospace", "ui-rounded", "system-ui", "-apple-system",
+  "BlinkMacSystemFont", "sans-serif", "serif", "monospace", "cursive", "fantasy", "inherit", "initial",
+]);
+const genericDisplay = GENERIC_FAMILIES.has(sample.displayFont || "");
+const genericBody = GENERIC_FAMILIES.has(sample.bodyFont || "");
+if (genericDisplay || genericBody) {
+  problems.push(
+    `The fonts resolved to CSS generics, not real families ` +
+      `(display: ${sample.displayFont || "none"}, body: ${sample.bodyFont || "none"}).\n` +
+      `   A generic cannot be requested from Google Fonts — the URL would 404 and the render\n` +
+      `   would silently fall back to a system face. Name the real families by hand.\n` +
+      `   A Tailwind site usually renders as Inter; the project's CSS or tailwind.config will say.`,
+  );
+}
+
 const ground = sample.pageBackground || sample.backgrounds[0]?.value || "#FFFFFF";
 // Prefer the heading colour, but only if it actually reads on the ground — a
 // site with a dark hero can give a white heading, which would be invisible on
@@ -152,13 +194,40 @@ const ink =
   sample.textColours.map((t) => t.value).find((c) => contrast(c, ground) >= 4.5) ||
   sample.textColours[0]?.value ||
   "#111111";
-const accent =
-  sample.buttonBg ||
-  sample.backgrounds.map((b) => b.value).find((c) => contrast(c, ground) > 1.6 && contrast(c, ink) > 1.6) ||
-  "#DD5230";
+const candidates = [
+  sample.buttonBg,
+  ...sample.backgrounds.map((b) => b.value),
+  ...sample.textColours.map((t) => t.value),
+].filter(Boolean);
+
+// An accent equal to the ground is invisible, and the contrast number alone
+// doesn't communicate that: 1:1 printed as "under 4.5:1" reads like an ordinary
+// low-contrast warning rather than "these are the same colour". Pick the best
+// real candidate instead of writing a broken value.
+const usableAccent = (c) => contrast(c, ground) >= 1.6 && contrast(c, ink) >= 1.6;
+let accent = [sample.buttonBg, ...candidates].find((c) => c && usableAccent(c)) || null;
+
+if (!accent) {
+  const best = candidates
+    .map((c) => ({ c, score: contrast(c, ground) }))
+    .sort((a, b) => b.score - a.score)[0];
+  problems.push(
+    `No usable accent colour on the page. Nothing sampled has enough contrast against the\n` +
+      `   ground (${ground}) to be visible.` +
+      (best ? ` The strongest candidate was ${best.c} at ${best.score}:1.` : "") +
+      `\n   Take the accent from the product's design tokens or logo SVG instead — that is\n` +
+      `   usually where the real brand colour lives, and a scrape cannot see it.`,
+  );
+  accent = best?.c || ground;
+} else if (accent !== sample.buttonBg && sample.buttonBg) {
+  notes.push(
+    `The sampled button colour (${sample.buttonBg}) was unusable against the ground; ` +
+      `using ${accent} from the observed list instead. Confirm it is really the brand accent.`,
+  );
+}
 
 const proposed = {
-  name: sample.title?.split(/[|—-]/)[0].trim() || "Unknown",
+  name: brandName,
   _source: url,
   _confirm:
     "Sampled from the live site — colours are weighted by rendered area, not read from a brand guide. " +
@@ -187,9 +256,15 @@ const proposed = {
     displayFamily: sample.displayFont || "Georgia",
     displayWeight: 600,
     bodyFamily: sample.bodyFont || "Helvetica",
-    googleFontsHref: `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
-      sample.displayFont || "Georgia",
-    )}:wght@600&family=${encodeURIComponent(sample.bodyFont || "Helvetica")}:wght@400;600&display=block`,
+    // Omitted entirely when the families are generics — a URL that 404s is worse
+    // than an absent one, because the render still succeeds and quietly uses a
+    // system face nobody chose.
+    googleFontsHref:
+      genericDisplay || genericBody
+        ? null
+        : `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
+            sample.displayFont,
+          )}:wght@600&family=${encodeURIComponent(sample.bodyFont)}:wght@400;600&display=block`,
     displayTracking: "-0.02em",
     displayLineHeight: 1.05,
     _confirm:
@@ -212,5 +287,35 @@ const proposed = {
 };
 
 const out = arg("out", "./brand.json");
+const force = process.argv.includes("--force");
+
+for (const n of notes) console.warn(`Note: ${n}\n`);
+
+if (problems.length && !force) {
+  console.error(`Not writing ${out} — what was sampled would produce unusable creative:\n`);
+  for (const p of problems) console.error(` ✘ ${p}\n`);
+  console.error(
+    `Fix the values by hand and write the file yourself, or re-run with --force to write it\n` +
+      `anyway and correct it afterwards. Observed values, to choose from:\n` +
+      JSON.stringify(
+        {
+          backgroundsByArea: sample.backgrounds.map((b) => b.value),
+          textColoursByVolume: sample.textColours.map((t) => t.value),
+          displayFont: sample.displayFont,
+          bodyFont: sample.bodyFont,
+          buttonBg: sample.buttonBg,
+        },
+        null,
+        2,
+      ),
+  );
+  process.exit(1);
+}
+
+if (problems.length) {
+  proposed._problems = problems;
+  console.warn(`Writing anyway (--force). ${problems.length} problem(s) recorded in the file.\n`);
+}
+
 writeFileSync(out, JSON.stringify(proposed, null, 2) + "\n");
-console.log(JSON.stringify({ written: out, sampled: sample }, null, 2));
+console.log(JSON.stringify({ written: out, name: proposed.name, accent, ground, sampled: sample }, null, 2));

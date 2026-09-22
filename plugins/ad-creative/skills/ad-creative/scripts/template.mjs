@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -51,10 +51,30 @@ export function loadBrand(brandPath) {
   return brand;
 }
 
-/** Inline the monogram so a rendered frame needs no file server. */
+/**
+ * Inline the monogram so a rendered frame needs no file server.
+ *
+ * Resolved against the brand file's own directory first. The skill recommends
+ * keeping a client's brand.json beside their campaign rather than inside the
+ * skill, and a relative markPath has to keep working when you do that —
+ * otherwise the only option is an absolute path, which then breaks on the next
+ * machine. SKILL_ROOT stays as the fallback for the bundled brands.
+ */
 export function markTag(brand, className = "mark") {
   if (!brand.logo?.markPath) return "";
-  const svg = readFileSync(resolve(SKILL_ROOT, brand.logo.markPath), "utf8");
+  const candidates = [
+    brand._dir ? resolve(brand._dir, brand.logo.markPath) : null,
+    resolve(SKILL_ROOT, brand.logo.markPath),
+  ].filter(Boolean);
+  const found = candidates.find((p) => existsSync(p));
+  if (!found) {
+    console.warn(
+      `Logo not found, rendering without it. Looked in:\n  ${candidates.join("\n  ")}\n` +
+        `markPath is resolved against the brand file first, then the skill folder.`,
+    );
+    return "";
+  }
+  const svg = readFileSync(found, "utf8");
   const uri = "data:image/svg+xml;base64," + Buffer.from(svg).toString("base64");
   return `<img class="${className}" src="${uri}" alt="">`;
 }

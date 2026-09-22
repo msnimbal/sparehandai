@@ -19,7 +19,7 @@ and a copy change is a re-run rather than a redraw.
 0. **Run `node scripts/setup.mjs`** once per machine, and again after a plugin update.
 1. **Establish the brand** — derive it from the business's website, or fill in the template.
 2. **Understand the offer** and write the copy, counted against platform limits.
-3. **Show the slide table** and get the words, position and loudness approved before rendering video.
+3. **Render a sample frame, then show the slide table** — approval against a picture, not a table.
 4. **Write `campaign.json`.**
 5. **Render**, look at what came out, and fix what's wrong.
 6. **Hand over** the files and say plainly what still needs a human.
@@ -33,20 +33,36 @@ Skipping step 1 is the most common way this goes wrong: rendering with a guessed
 of files that look finished and are all unusable, so the scripts refuse to run without one rather
 than guessing.
 
-Two ways to get one. If the business has a website — **ask for the URL** and derive a starting
-point:
+**If the business has a codebase, look there first.** Design tokens (`index.css`,
+`tailwind.config`, a theme file) and the logo SVG are a better source than any scrape: they hold the
+real accent, and a scrape can only see what a page happens to paint. Ask whether the repo is to
+hand before reaching for the extractor.
+
+Otherwise — **ask for the URL** and derive a starting point:
 
 ```bash
 node scripts/extract-brand.mjs --url https://theirsite.com.au --out ./brand.json
 ```
 
-This samples what the site actually renders — colours weighted by how much area they cover, the
-fonts headings and body are really set in, the button treatment — which is far better than reading
-a screenshot. But it is a proposal, not an answer. It cannot tell a brand colour from incidental
-chrome, and four things can never be scraped:
+**Expect to correct it by hand.** It samples what the page actually renders, which beats reading a
+screenshot, but three fields are wrong often enough to check every time:
 
-- **The legal identity** — company name, ABN or equivalent, privacy URL. Paid social requires the
-  advertiser be identifiable. Ask.
+- **`name`** — taken from `og:site_name` or the domain. If the crawler hit a login wall it will warn
+  and print the URL it settled on; the colours there are real and the brand is not.
+- **`accent`** — the sampled button colour is often chrome rather than brand. The script refuses to
+  write an accent that is invisible on the ground and substitutes the best observed candidate, but
+  "best observed" is not the same as "correct".
+- **`fonts`** — a Tailwind site resolves to `ui-sans-serif`, a CSS generic, not a family. The script
+  refuses rather than emitting a Google Fonts URL that 404s and silently falls back. Name the real
+  family; it's usually Inter.
+
+It exits non-zero and writes nothing when it finds those, so a broken brand file can't quietly reach
+a render. `--force` writes anyway and records the problems inside the file.
+
+Four things can never be scraped at all:
+
+- **The legal identity** — company name, company number, privacy URL. Ask, but see below: for a sole
+  individual there may legitimately be nothing to print.
 - **An SVG logo.** A scraped PNG falls apart at 1080px. Ask for vector.
 - **What they're allowed to claim.** Awards, ratings, client names — each needs evidence.
 - **Voice, and what they refuse to say.**
@@ -58,6 +74,21 @@ which you guessed.
 Save it as `brands/<name>.json` inside the skill, or anywhere beside the campaign and pass the path
 — `--brand ./acme-brand.json`. Keeping it next to the campaign is usually better for client work:
 the brand travels with the job rather than accumulating in a shared skill folder.
+
+### When there is no company
+
+`legal.line` is allowed to be null, and for a lot of clients it should be. An individual building an
+app on their own has no entity and no company number, and the template's shape can push toward
+padding the line with something invented — which is worse than leaving it out.
+
+Advertiser identity on Meta and Google is satisfied by the **ad account and Page behind the ad**, not
+by a line inside the image. A company number becomes relevant when there is a company, and an ABN
+when money changes hands in Australia. Absent that, print the disclaimer the category actually needs
+— a non-clinical note and a crisis number for a wellbeing app, say — and nothing else.
+
+Set `legal.line` to null and leave it. It is a finished state, not a TODO.
+
+### Contrast
 
 Watch the `contrast.accentOnGround` value the extractor computes. Below 4.5:1 an accent is fine for
 large headings, buttons and rules but fails for body text and fine print — in that case keep small
@@ -86,12 +117,36 @@ more than it looks.
 Three or four headline variants, changing **one thing at a time** — layout, date, qualifying line
 and CTA stay identical, so the test measures the headline rather than everything at once.
 
-## 3. Put the slides in a table and get them approved
+## 3. Render a sample frame, then get the table approved
 
-Before rendering the video, show the whole sequence as a table and ask what to change. Do this
-every time. A reel is the one output where the person has strong opinions they won't volunteer
-unprompted — they'll accept a static ad they're lukewarm about, but they watch a reel the way an
-audience would, and "slide three is too shouty" only surfaces when you ask.
+**Show a picture before you ask.** Render the first slide and the CTA slide, show both images, and
+only then put the table up for approval:
+
+```bash
+node scripts/reel.mjs --campaign ./campaign.json --sample 1,5
+```
+
+That renders only those frames as PNGs and skips ffmpeg entirely, so it takes seconds.
+
+This ordering exists because a Markdown table cannot show the thing that most often needs changing.
+A 9:16 headline line fits about **14 characters** — see `references/platform-specs.md` — and a
+perfectly tidy-looking table will hide the fact that every line is about to wrap into a ragged
+four-line stack. Tone hides the same way: a line reads as bossy in a picture long before anyone can
+see it in a table. Approval given against a table gets reversed after the render; approval given
+against a frame holds.
+
+Do the same for statics before committing to the full set:
+
+```bash
+node scripts/render.mjs --campaign ./campaign.json --variants a --sizes story-9x16,disp-300x250
+```
+
+Those two placements break first — 9:16 has the tightest line budget, and 300×250 has the least room
+between the headline and the fine print.
+
+Then show the table and ask what to change. A reel is the one output where people have strong
+opinions they won't volunteer unprompted: they'll accept a static they're lukewarm about, but they
+watch a reel the way an audience would.
 
 | # | Blurb | Position | Size | Emotion | Loudness |
 |---|---|---|---|---|---|
@@ -172,8 +227,19 @@ node scripts/contact-sheet.mjs --out ./out --title "Campaign name"
 Narrow with `--sizes meta-1x1,story-9x16` or `--variants a,b` while iterating; render everything
 once the copy has settled.
 
-**Then look at what came out.** Read the contact sheet, and open the 728×90 and the 9:16 at full
-size — those two break first. Specifically check that the headline hasn't overflowed a banner, that
+**The render checks itself.** Every frame is inspected in the browser before the PNG is kept, and
+the run exits non-zero if any frame fails:
+
+- **Hard failure** when the headline, subline or CTA overlaps the fine print, or content is cropped
+  by the frame. That collision is how a disclosure disappears from a file that still looks finished
+  — the worst failure available to a tool whose whole premise is an accurate legal line. Files are
+  still written so you can see what happened, but they are not usable; fix the copy and re-render.
+- **Warning** when a `<br>`-delimited headline segment wrapped, naming the variant, placement and
+  segment. Unintended breaks are a quality loss rather than a compliance one, and sometimes a wrap
+  is what you wanted — so it says so and carries on.
+
+**Then look at what came out anyway.** Read the contact sheet, and open the 728×90 and the 9:16 at
+full size — those two break first. Specifically check that the headline hasn't overflowed a banner, that
 nothing important sits in a story's safe zones, and that the fine print is still legible at size.
 
 ### The video

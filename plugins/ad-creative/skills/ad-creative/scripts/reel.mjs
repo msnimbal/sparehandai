@@ -13,8 +13,9 @@ import { launchBrowser } from "./browser.mjs";
 import { ffmpegAvailable, ffmpegInstallHint, STATICS_STILL_WORK } from "./ffmpeg.mjs";
 import { execFileSync } from "child_process";
 import { mkdirSync, readFileSync, existsSync } from "fs";
-import { join, resolve } from "path";
+import { dirname, join, resolve } from "path";
 import { html, SIZES, loadBrand, markTag, textureTag } from "./template.mjs";
+import { inspectFrame, checkFrame, FrameReport } from "./verify.mjs";
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -39,7 +40,12 @@ if (!brandRef) {
   process.exit(1);
 }
 const brand = loadBrand(brandRef);
-const OUT = resolve(arg("out", campaign.out || "./out"));
+// Same split as render.mjs: --out is relative to the shell, campaign.out is
+// relative to the campaign file.
+const cliOut = arg("out");
+const OUT = cliOut
+  ? resolve(cliOut)
+  : resolve(dirname(resolve(campaignPath)), campaign.out || "./out");
 const FRAMES = join(OUT, ".reel-frames");
 mkdirSync(FRAMES, { recursive: true });
 
@@ -49,6 +55,19 @@ if (!slides?.length) {
   console.error("campaign.reel.slides is empty — nothing to cut.");
   process.exit(1);
 }
+
+/**
+ * --sample 1,5 renders only those slides as PNGs and stops before ffmpeg.
+ *
+ * This exists because a Markdown slide table cannot show that a headline is
+ * about to wrap into a four-line stack, or that a line reads as bossy. Showing
+ * one real frame before asking for approval is the difference between an
+ * approval that means something and one that gets reversed after the render.
+ */
+const sample = arg("sample", arg("stills", ""))
+  .split(",")
+  .map((n) => Number(n.trim()))
+  .filter((n) => Number.isInteger(n) && n > 0);
 
 const SIZE = arg("size", reel.size || "story-9x16");
 const TARGET = Number(arg("seconds", reel.seconds ?? 13));
@@ -83,7 +102,7 @@ if (hold < 1) {
   );
 }
 
-if (!ffmpegAvailable()) {
+if (!sample.length && !ffmpegAvailable()) {
   console.error(`${ffmpegInstallHint()}\n\n${STATICS_STILL_WORK}`);
   process.exit(1);
 }
@@ -98,8 +117,19 @@ if (campaign.texture?.file) {
 const s = SIZES[SIZE];
 const browser = await launchBrowser();
 const stills = [];
+const report = new FrameReport();
 
-for (const [i, slide] of slides.entries()) {
+const chosen = sample.length
+  ? sample.map((n) => n - 1).filter((i) => i >= 0 && i < slides.length)
+  : slides.map((_, i) => i);
+
+if (sample.length && !chosen.length) {
+  console.error(`No slide matches --sample ${sample.join(",")}. There are ${slides.length} slides, numbered from 1.`);
+  process.exit(1);
+}
+
+for (const i of chosen) {
+  const slide = slides[i];
   const page = await browser.newPage({ viewport: { width: s.w, height: s.h }, deviceScaleFactor: 1 });
   await page.setContent(
     html({
@@ -126,12 +156,23 @@ for (const [i, slide] of slides.entries()) {
   );
   await page.evaluate(() => document.fonts.ready);
 
-  const file = join(FRAMES, `slide-${i}.png`);
+  report.add(checkFrame(await inspectFrame(page), `slide ${i + 1} / ${SIZE}`));
+
+  // Samples go beside the other deliverables; full-run frames are scratch.
+  const file = sample.length ? join(OUT, `slide-${i + 1}-${SIZE}.png`) : join(FRAMES, `slide-${i}.png`);
   await page.screenshot({ path: file });
   stills.push(file);
   await page.close();
 }
 await browser.close();
+
+const failed = report.finish();
+
+if (sample.length) {
+  console.log(stills.join("\n"));
+  console.log("\nSample frames only — no video cut. Show these before asking for approval.");
+  process.exit(failed ? 2 : 0);
+}
 
 const inputs = [];
 for (const f of stills) inputs.push("-loop", "1", "-t", String(perSlide), "-i", f);
@@ -175,3 +216,4 @@ try {
 }
 
 console.log(mp4);
+if (failed) process.exit(2);
