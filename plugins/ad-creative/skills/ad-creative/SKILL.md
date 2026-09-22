@@ -289,6 +289,39 @@ in an ad for a workshop is a misleading representation, whatever the intent — 
 to synthetic people, fabricated attendees, or an AI avatar of a real person, which also carries
 disclosure obligations on most platforms.
 
+The line is *generate atmosphere, never evidence*. Texture, linework and abstract wash claim
+nothing, so generate them freely. Anything depicting the premises, the team, the event, the product
+or the customers is a factual claim about the business and has to be real.
+
+### Exporting the copy layer, when something else supplies the background
+
+A background at 5–12% opacity is a texture. When the background is the *point* — real b-roll,
+footage, a painterly plate — the copy has to sit over it, and the frames above have the brand ground
+baked in, so compositing behind them does not work.
+
+`export-layers.mjs` writes the copy on a transparent ground, plus a `layers.json` recording where
+every element landed:
+
+```bash
+node scripts/export-layers.mjs --campaign ./campaign.json                    # the reel's slides
+node scripts/export-layers.mjs --campaign ./campaign.json --variants a,b     # statics instead
+```
+
+It is a separate command, not a flag, because this is the only part of the skill that assumes tools
+you may not have — footage, a model, an assembler. Everything above works with nothing but a browser
+and ffmpeg, and stays that way.
+
+The ground and the texture are omitted: both belong to whatever supplies the background now.
+Legibility moves too — white copy over a bright frame needs a scrim, and nothing here can see the
+footage — so `layers.json` carries the real boxes for the headline, subline, CTA and fine print,
+letting a compositor place that scrim against measurements instead of a guess. No video is written;
+H.264 has no alpha channel, so an "alpha MP4" is just the copy flattened onto black.
+
+What does *not* move is the type. Family, weights, tracking, the loudness treatment, the palette and
+the safe-zone-aware footer render exactly as the real ad renders them — which is why the legal line
+survives the trip. A downstream tool should never patch `colours.ground` to fake this; reaching into
+internals breaks the next time `template.mjs` changes.
+
 ## 6. Hand over
 
 Say where the files are, and be direct about what a human still has to do — set up the campaigns,
@@ -352,6 +385,8 @@ scripts/setup.mjs           installs Playwright + Chromium; re-runnable
 scripts/template.mjs        placement specs + the HTML for one frame
 scripts/render.mjs          statics: variants × placements
 scripts/reel.mjs            slides → silent MP4
+scripts/verify.mjs          per-frame checks; overlap fails, unintended wrap warns
+scripts/export-layers.mjs   copy on a transparent ground + layers.json, for compositing
 scripts/contact-sheet.mjs   every PNG on one page, grouped by variant
 scripts/extract-brand.mjs   website → proposed brand.json
 brands/example.json         brand template to copy and fill in
