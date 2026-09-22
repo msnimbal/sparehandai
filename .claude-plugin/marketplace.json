@@ -32,7 +32,7 @@
     {
       "name": "ad-creative",
       "description": "Produce on-brand paid ad creative from a use case — statics for every Meta and Google placement plus a silent MP4 for Reels, Stories and Shorts, rendered from HTML so brand colour and type are exact.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/ad-creative",
       "author": {
         "name": "SpareHand AI"
