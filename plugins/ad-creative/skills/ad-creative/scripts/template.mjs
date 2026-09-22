@@ -96,6 +96,7 @@ export function textureTag(svgPath, opacity) {
 export function html({
   size, brand, headline, sub, eyebrow, cta, fine, mark, bg,
   loudness = "normal", scale = 1, align = "center", vAlign = "center",
+  alpha = false,
 }) {
   const s = SIZES[size];
   if (!s) throw new Error(`Unknown size "${size}". Known: ${Object.keys(SIZES).join(", ")}`);
@@ -112,6 +113,12 @@ export function html({
   const headSize = Math.round(s.head * L.scale * scale);
   const headWeight = Math.min(900, (f.displayWeight || 600) + L.weight);
 
+  // Alpha frames are a text layer for something else to composite over, so the
+  // ground and the texture both belong to whatever supplies the background —
+  // painting them here would either hide that background or double the texture.
+  const ground = alpha ? "transparent" : c.ground;
+  const bgTag = alpha ? "" : bg;
+
   const justify =
     vAlign === "top" ? "flex-start" : vAlign === "bottom" ? "flex-end" : "center";
   const items = align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center";
@@ -123,7 +130,7 @@ export function html({
 <link href="${f.googleFontsHref}" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{width:${s.w}px;height:${s.h}px;background:${c.ground};font-family:'${f.bodyFamily}',sans-serif;overflow:hidden}
+  body{width:${s.w}px;height:${s.h}px;background:${ground};font-family:'${f.bodyFamily}',sans-serif;overflow:hidden}
   .bg{position:absolute;pointer-events:none}
   .bg-img{inset:0;width:100%;height:100%;object-fit:cover}
   .frame{position:relative;width:100%;height:100%;padding:${s.pad}px ${s.pad}px ${vPad};display:flex;
@@ -147,7 +154,7 @@ export function html({
   .mark{width:${Math.round(s.w * (s.tight || banner ? 0.075 : 0.05))}px;flex:none;display:block}
 </style></head><body>
 <div class="frame">
-  ${bg || ""}
+  ${bgTag || ""}
   ${eyebrow ? `<div class="eyebrow">${eyebrow}</div>` : ""}
   <div class="head">${headline}</div>
   ${s.rule ? '<div class="rule"></div>' : ""}
