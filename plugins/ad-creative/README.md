@@ -48,8 +48,10 @@ node scripts/contact-sheet.mjs --out ./out
 
 ## Brands
 
-`brands/sparehand.json` ships complete. For another business, derive a starting point from their
-site and confirm it with them:
+**No brand ships with the skill, and the scripts refuse to run without one** — a guessed palette
+produces a full set of files that look finished and are all unusable.
+
+For a business with a website, derive a starting point and confirm it with them:
 
 ```bash
 node scripts/extract-brand.mjs --url https://theirsite.com --out ./brand.json
@@ -58,6 +60,10 @@ node scripts/extract-brand.mjs --url https://theirsite.com --out ./brand.json
 It samples the live page — resolving colours through the browser, so `oklch()` and friends work —
 and reports what it observed alongside what it picked. It cannot scrape the legal identity, a
 vector logo, or what the client is allowed to claim. Those have to be asked for.
+
+Without a website, copy `brands/example.json` and fill it in. Save the result as
+`brands/<name>.json`, or keep it beside the campaign and pass `--brand ./acme-brand.json` so the
+brand travels with the job.
 
 ## Why some of this is not style preference
 
