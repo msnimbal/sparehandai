@@ -112,6 +112,20 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     console.log(`      backgrounds ${bgs.join(", ")} | motion ${[...new Set(r.slides.map((s2) => s2.motion.kind))].join(", ")}`);
   }
 
+  // Only worth offering when the plate is synthetic. If real footage is already
+  // carrying the ad there is nothing to buy, and offering anyway just invites
+  // spending for its own sake.
+  const anyGenerated = timeline.renders.some((r) =>
+    r.slides.some((s2) => s2.background.source === "generated"));
+  if (anyGenerated) {
+    console.log(
+      `\nThese backgrounds are generated locally, for nothing. If you want to try a paid\n` +
+        `generator instead, say so and Claude will check which connectors are available,\n` +
+        `price it, and show you the prompts before anything is spent. The frames above are\n` +
+        `the comparison — sometimes the free one wins.`,
+    );
+  }
+
   console.log(
     `\nFive things to check, because config cannot show them:\n` +
       `  assets    — is the background the right thing to be showing at all?\n` +

@@ -39,9 +39,18 @@ refuses a combination that leaves a slide shorter than the transition.
 
 **`fps`** — default 25.
 
-**`budget.tier`** — a ceiling, not a preference. Planning refuses rather than quietly spending past
-it. `0` is local-only and is everything this skill does today; `1` is reserved for local models,
-`2` for paid services.
+**`budget.tier`** — a ceiling and a *permission*, never an instruction to spend. `0` is local-only
+and is everything the scripts do on their own. Above `0` the pipeline still renders Tier 0 first and
+asks before any paid call, with the free frames on screen as the comparison, the connector named,
+the cost preflighted and the prompt shown. See *Trying a paid generator* in SKILL.md.
+
+Images bought that way come back as ordinary files:
+
+```json
+"background": { "kind": "files", "files": ["./acquired/plate-1.png"] }
+```
+
+Nothing downstream knows or cares that they were paid for.
 
 ### `background`
 

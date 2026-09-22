@@ -90,8 +90,9 @@ that routes to generated plates, which is a legitimate outcome and the common on
 - **`background.motion`** — `warp`, `kenburns`, `none`. Photographs are drifted rather than warped
   regardless, and the planner says so when it overrides you.
 - **`audio.kind`** — `bed`, `file`, `none`.
-- **`budget.tier`** is a ceiling, and planning refuses rather than quietly spending past it. Tier 0
-  is everything in this skill today.
+- **`budget.tier`** is a ceiling and a *permission*, never an instruction to spend. Planning refuses
+  rather than quietly going past it, and a tier above 0 still renders Tier 0 first and asks. Tier 0
+  is everything the scripts do on their own.
 
 ## 4. Plan
 
@@ -215,6 +216,46 @@ the ad.
 
 A supplied track shorter than the cut is boomeranged before looping, so the wrap is inaudible rather
 than a click every few seconds.
+
+## Trying a paid generator, after the free one
+
+Tier 0 renders first, always. Only then is it worth asking whether paying would improve it.
+
+**Never initiate a paid call.** `budget.tier` above 0 is *permission*, not an instruction — if Tier 0
+covers the job, use Tier 0 and say so. The person pays for these, and on a client job it is not even
+your account.
+
+Once the Tier 0 frames exist, offer the upgrade — but only when the background is a **generated
+plate**. If real footage is already carrying the ad there is nothing to buy, and offering anyway
+just invites spending for its own sake.
+
+The offer needs four things before anyone says yes:
+
+1. **The free version, rendered.** Not described — on screen, next to the question. This is the
+   comparison, and sometimes it wins: asked to animate a painterly still, a video generator returned
+   a cyan bleed, a pale bloom and a blank-faced figure that were not in the source, while the local
+   warp could not invent any of them because `displace` only relocates existing pixels.
+2. **Which connector.** Check what is actually available in the session — Higgsfield, a Gemini image
+   model, whatever is connected — and ask which to use if there is more than one. Never pick
+   silently, and if none is connected, say so and stop at Tier 0.
+3. **The cost, before the call.** Preflight it where the connector supports that and show the number.
+   A generation that is cheap per image is not cheap across five slides and three placements.
+4. **The prompt, in full.** This is where *generate atmosphere, never evidence* is actually enforced.
+   Paid models are photoreal by default, so this is exactly where a synthetic "workshop photo" gets
+   made by accident. The prompt should ask for texture and abstraction; refuse a request to depict
+   premises, a team, an event, a product or customers at any tier.
+
+On a yes: generate, save the files beside the campaign, and point the manifest at them —
+
+```json
+"background": { "kind": "files", "files": ["./acquired/plate-1.png", "./acquired/plate-2.png"] }
+```
+
+— then re-run `plan.mjs` and `propose.mjs`. The acquired images are ordinary background files from
+that point on; nothing downstream knows or cares that they were paid for.
+
+On a no, or no connector: the Tier 0 cut is already rendered and is a finished ad. That is the
+normal outcome, not a fallback.
 
 ## What this does not do
 
