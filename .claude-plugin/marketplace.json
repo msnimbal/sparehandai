@@ -1,5 +1,5 @@
 {
-  "name": "sparehand",
+  "name": "sparehand-skills",
   "version": "0.1.0",
   "description": "Skills for consulting and client delivery work, from SpareHand AI.",
   "owner": {
@@ -53,5 +53,9 @@
       ],
       "strict": true
     }
-  ]
+  ],
+  "metadata": {
+    "description": "Skills for consulting and client delivery work, from SpareHand AI.",
+    "version": "0.1.0"
+  }
 }
