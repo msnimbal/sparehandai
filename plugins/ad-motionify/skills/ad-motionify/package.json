@@ -1,0 +1,9 @@
+{
+  "name": "ad-motionify",
+  "private": true,
+  "type": "module",
+  "description": "Motion engine for the ad-motionify skill. No dependencies: node and ffmpeg are the whole list.",
+  "scripts": {
+    "test": "node --test tests/"
+  }
+}

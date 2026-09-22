@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "requirements-to-proposal",
-      "description": "Turn raw client requirements — meeting notes, chat threads, voice recordings, emails, documents — into a scope document, a PDF, and matching CRM records that stay in sync through every revision.",
+      "description": "Turn raw client requirements \u2014 meeting notes, chat threads, voice recordings, emails, documents \u2014 into a scope document, a PDF, and matching CRM records that stay in sync through every revision.",
       "version": "0.1.0",
       "source": "./plugins/requirements-to-proposal",
       "author": {
@@ -31,7 +31,7 @@
     },
     {
       "name": "ad-creative",
-      "description": "Produce on-brand paid ad creative from a use case — statics for every Meta and Google placement plus a silent MP4 for Reels, Stories and Shorts, rendered from HTML so brand colour and type are exact.",
+      "description": "Produce on-brand paid ad creative from a use case \u2014 statics for every Meta and Google placement plus a silent MP4 for Reels, Stories and Shorts, rendered from HTML so brand colour and type are exact.",
       "version": "0.2.0",
       "source": "./plugins/ad-creative",
       "author": {
@@ -49,6 +49,28 @@
         "reels",
         "brand",
         "video"
+      ]
+    },
+    {
+      "name": "ad-motionify",
+      "description": "Turn finished ad copy into motion \u2014 composite ad-creative's copy layers over real footage or procedurally generated brand-exact plates, add drift or a wet-pigment warp, and lay a synthesised bed underneath. No image or video model required.",
+      "version": "0.1.0",
+      "source": "./plugins/ad-motionify",
+      "author": {
+        "name": "SpareHand AI"
+      },
+      "homepage": "https://github.com/msnimbal/sparehandai/tree/main/plugins/ad-motionify",
+      "repository": "https://github.com/msnimbal/sparehandai",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "advertising",
+        "video",
+        "reels",
+        "motion",
+        "ffmpeg",
+        "b-roll",
+        "brand"
       ]
     }
   ]
