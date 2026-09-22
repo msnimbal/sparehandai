@@ -18,9 +18,15 @@ typeface, and a copy change is a re-run rather than a redraw.
 ## Install
 
 ```bash
-npm install --prefix skills/ad-creative
-npx --prefix skills/ad-creative playwright install chromium
+node skills/ad-creative/scripts/setup.mjs
 ```
+
+Installs Playwright and downloads Chromium. Checks first, so it's safe to re-run.
+
+**Installing the plugin does not do this for you** — plugin install copies files, it doesn't run
+`npm install`. The install path is also version-pinned, so a plugin update lands in a new directory
+with no dependencies and setup is needed again. The skill runs it automatically before rendering;
+this is only here for running the scripts by hand.
 
 `ffmpeg` is needed for **video only** — statics render without it. `reel.mjs` checks for it before
 rendering anything and prints the install command for your platform:

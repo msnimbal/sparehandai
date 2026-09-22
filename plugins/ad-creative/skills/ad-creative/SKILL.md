@@ -16,6 +16,7 @@ and a copy change is a re-run rather than a redraw.
 
 ## Order of operations
 
+0. **Run `node scripts/setup.mjs`** once per machine, and again after a plugin update.
 1. **Establish the brand** — derive it from the business's website, or fill in the template.
 2. **Understand the offer** and write the copy, counted against platform limits.
 3. **Show the slide table** and get the words, position and loudness approved before rendering video.
@@ -230,9 +231,28 @@ add music, confirm anything in a derived `brand.json` that was guessed rather th
 If the copy or the claims depend on something you couldn't verify — a price, a seat count, an award
 — say so rather than letting it ship silently.
 
+## Before the first render, on any machine
+
+Run this once and don't make the person do it themselves:
+
+```bash
+node scripts/setup.mjs
+```
+
+It installs Playwright and downloads Chromium, checks first, and exits in a second if they're
+already there — so running it before a render is cheap and running it twice is harmless.
+
+**Why it isn't automatic:** installing a plugin copies files, it does not run `npm install`. And the
+install path is version-pinned — `…/cache/<marketplace>/<plugin>/<version>/…` — so a plugin update
+lands in a fresh directory with no `node_modules` and setup is needed again. If a render fails with
+a Playwright error after everything was working, an update is the likely cause; re-run setup.
+
+If the plugin directory isn't writable (some managed installs), copy the skill folder somewhere the
+person owns and run from there.
+
 ## What this needs
 
-- **Node with Playwright.** If Chromium is missing, `npx playwright install chromium`.
+- **Node with Playwright.** `scripts/setup.mjs` handles it.
 - **ffmpeg — for video only.** `reel.mjs` checks before rendering any frames and prints the install
   command for the machine it's running on. Statics never need it.
 - **Network access at render time**, for Google Fonts. To work offline, bundle the font files and
@@ -262,6 +282,7 @@ all three platforms, but if something fails there, that is where to look first.
 ## Files
 
 ```
+scripts/setup.mjs           installs Playwright + Chromium; re-runnable
 scripts/template.mjs        placement specs + the HTML for one frame
 scripts/render.mjs          statics: variants × placements
 scripts/reel.mjs            slides → silent MP4
