@@ -1,10 +1,10 @@
 {
-  "brand": "sparehand",
+  "brand": "example",
   "out": "./out",
   "eyebrow": "31 October · Parramatta · Free",
   "cta": "Grab your seat",
-  "fine": "Applications reviewed — we call to check fit. SpareHand AI, a trading name of Sri Infra Services Pty Ltd, ABN 30 670 822 045, Sydney NSW.",
-  "fineShort": "Applications reviewed — we call to check fit.",
+  "fine": "Applications reviewed — we call to check fit. [Legal entity name], [company number], [city].",
+  "fineShort": "[Short qualifying line for small placements.]",
   "texture": {
     "file": "./texture.svg",
     "opacity": 0.07

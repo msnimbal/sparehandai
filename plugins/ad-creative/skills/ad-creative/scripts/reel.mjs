@@ -2,7 +2,7 @@
 /**
  * Render the campaign's slides and cut them into a silent MP4.
  *
- *   node reel.mjs --campaign ./campaign.json [--brand sparehand] [--out ./out]
+ *   node reel.mjs --campaign ./campaign.json --brand <name|path> [--out ./out]
  *                 [--seconds 13] [--transition slideleft] [--xfade 0.5]
  *                 [--size story-9x16]
  *
@@ -28,7 +28,17 @@ if (!campaignPath) {
 }
 
 const campaign = JSON.parse(readFileSync(resolve(campaignPath), "utf8"));
-const brand = loadBrand(arg("brand", campaign.brand || "sparehand"));
+const brandRef = arg("brand", campaign.brand);
+if (!brandRef) {
+  console.error(
+    'No brand. Pass --brand <name|path/to/brand.json>, or set "brand" in the campaign file.\n' +
+      "There is deliberately no default: rendering against the wrong palette produces a full set of\n" +
+      "files that look finished and are all unusable. brands/example.json is a template to fill in,\n" +
+      "and scripts/extract-brand.mjs can propose one from a website.",
+  );
+  process.exit(1);
+}
+const brand = loadBrand(brandRef);
 const OUT = resolve(arg("out", campaign.out || "./out"));
 const FRAMES = join(OUT, ".reel-frames");
 mkdirSync(FRAMES, { recursive: true });

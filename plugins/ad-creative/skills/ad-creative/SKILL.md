@@ -1,6 +1,6 @@
 ---
 name: ad-creative
-description: "Produce on-brand paid ad creative from a use case — static images for every Meta and Google placement, plus a silent MP4 slide video for Reels, Stories and Shorts, rendered from HTML so brand colour and type are exact. Use this whenever someone wants ads, ad creative, social ads, a campaign, banners, a promo video, a Reel or a Short for an offer, event or product, and also when they ask for ad copy, headlines or a landing-page-matching CTA — even if they haven't mentioned image sizes or video. Defaults to the SpareHand AI brand; for any other business, derive a brand file from their website first."
+description: "Produce on-brand paid ad creative for any business from a use case — static images for every Meta and Google placement, plus a silent MP4 slide video for Reels, Stories and Shorts, rendered from HTML so brand colour and type are exact. Use this whenever someone wants ads, ad creative, social ads, a campaign, banners, a promo video, a Reel or a Short for an offer, event or product, and also when they ask for ad copy, headlines or a landing-page-matching CTA — even if they haven't mentioned image sizes or video. Works for whatever business the session is about: ask for their website and derive the brand, or fill in the bundled template."
 ---
 
 # Ad creative from a use case
@@ -16,7 +16,7 @@ and a copy change is a re-run rather than a redraw.
 
 ## Order of operations
 
-1. **Establish the brand** — use the bundled one, or build one from the client's website.
+1. **Establish the brand** — derive it from the business's website, or fill in the template.
 2. **Understand the offer** and write the copy, counted against platform limits.
 3. **Show the slide table** and get the words, position and loudness approved before rendering video.
 4. **Write `campaign.json`.**
@@ -28,9 +28,12 @@ Skipping step 1 is the most common way this goes wrong: rendering with a guessed
 
 ## 1. Establish the brand
 
-`brands/sparehand.json` is bundled and complete. For SpareHand AI work, use it and move on.
+**There is no default brand, on purpose.** Rendering against the wrong palette produces a full set
+of files that look finished and are all unusable, so the scripts refuse to run without one rather
+than guessing.
 
-For anyone else, **ask for their website** and derive a starting point:
+Two ways to get one. If the business has a website — **ask for the URL** and derive a starting
+point:
 
 ```bash
 node scripts/extract-brand.mjs --url https://theirsite.com.au --out ./brand.json
@@ -47,8 +50,13 @@ chrome, and four things can never be scraped:
 - **What they're allowed to claim.** Awards, ratings, client names — each needs evidence.
 - **Voice, and what they refuse to say.**
 
-Show the proposed `brand.json` to the person and confirm it before rendering anything. Say which
-values you sampled and which you guessed.
+If there's no website, copy **`brands/example.json`** and fill it in by asking. Either way, show the
+result to the person and confirm it before rendering anything. Say which values you sampled and
+which you guessed.
+
+Save it as `brands/<name>.json` inside the skill, or anywhere beside the campaign and pass the path
+— `--brand ./acme-brand.json`. Keeping it next to the campaign is usually better for client work:
+the brand travels with the job rather than accumulating in a shared skill folder.
 
 Watch the `contrast.accentOnGround` value the extractor computes. Below 4.5:1 an accent is fine for
 large headings, buttons and rules but fails for body text and fine print — in that case keep small
@@ -118,11 +126,11 @@ Copy `examples/campaign.example.json` and edit. The shape:
 
 ```json
 {
-  "brand": "sparehand",
+  "brand": "example",
   "out": "./out",
   "eyebrow": "31 October · Parramatta · Free",
   "cta": "Grab your seat",
-  "fine": "Applications reviewed — we call to check fit. <legal identity line>",
+  "fine": "Applications reviewed — we call to check fit. [legal identity line]",
   "fineShort": "Applications reviewed — we call to check fit.",
   "texture": { "file": "./texture.svg", "opacity": 0.07 },
   "variants": {
@@ -145,6 +153,9 @@ Notes that save a re-render:
 - **`fineShort`** is used on small display sizes where the full legal line won't fit legibly.
 - **`<br>`** controls line breaks in headlines. Use it — letting a two-line headline wrap wherever
   it lands is the difference between deliberate and accidental.
+- **Copy is injected as HTML**, which is what makes `<br>` work. The cost is that anything in angle
+  brackets is parsed as a tag and disappears silently — `<legal entity>` renders as nothing at all.
+  Use square brackets for placeholders, and write `&lt;` if a real angle bracket is needed.
 - **`texture`** is optional. A flat ground is clean but can read as unfinished; see *Backgrounds*.
 - **Per-slide `loudness`, `scale`, `align` and `vAlign`** carry the table's decisions into the
   render. Variants accept the same four fields, if one headline wants a different treatment.
@@ -256,7 +267,7 @@ scripts/render.mjs          statics: variants × placements
 scripts/reel.mjs            slides → silent MP4
 scripts/contact-sheet.mjs   every PNG on one page, grouped by variant
 scripts/extract-brand.mjs   website → proposed brand.json
-brands/sparehand.json       the bundled brand
+brands/example.json         brand template to copy and fill in
 examples/campaign.example.json
 references/copy-rules.md       claims, scarcity, voice — read before writing copy
 references/platform-specs.md   limits, safe zones, encoding

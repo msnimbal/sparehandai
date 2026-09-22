@@ -1,0 +1,55 @@
+{
+  "name": "Example Co",
+  "_template": "Copy this, fill it in for the business being advertised, and save as brands/<name>.json or beside the campaign. Never run a real campaign against this file unchanged: the legal line is empty, and a paid ad with no identifiable advertiser is a platform-policy problem.",
+
+  "colours": {
+    "ground": "#FFFFFF",
+    "ink": "#111111",
+    "accent": "#2B5CE6",
+    "body": "#555555"
+  },
+  "contrast": {
+    "accentOnGround": null,
+    "note": "Compute accent-on-ground contrast. Under 4.5:1 it is fine for large headings, buttons and rules but fails for body text and fine print, which should stay ink."
+  },
+
+  "fonts": {
+    "displayFamily": "Playfair Display",
+    "displayWeight": 600,
+    "bodyFamily": "Inter",
+    "googleFontsHref": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;600&display=block",
+    "displayTracking": "-0.02em",
+    "displayLineHeight": 1.05,
+    "allowDisplayCaps": true,
+    "_capsNote": "Set false where the display face is drawn for mixed case. `shout` then raises weight and size instead of setting caps."
+  },
+
+  "button": { "radius": "0.4em" },
+
+  "logo": {
+    "markPath": null,
+    "_note": "Path to an SVG monogram, relative to the skill root. Ask for vector — a scraped PNG falls apart at 1080px. Null renders without a mark."
+  },
+
+  "legal": {
+    "line": null,
+    "privacyUrl": null,
+    "_note": "Required for paid social: the advertiser must be identifiable. Ask for the legal entity name, its company number, and a privacy URL."
+  },
+
+  "voice": {
+    "spelling": "en-AU",
+    "description": null,
+    "bannedWords": []
+  },
+
+  "claims": {
+    "forbidden": [
+      "star ratings, review counts or aggregate rating markup",
+      "testimonials or named client claims",
+      "'trusted by' or client-roster claims",
+      "performance guarantees"
+    ],
+    "note": "Keep these unless the client can evidence the claim in writing. They are consumer-law and platform-policy matters, not style preferences."
+  }
+}

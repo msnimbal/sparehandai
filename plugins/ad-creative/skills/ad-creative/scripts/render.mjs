@@ -2,7 +2,7 @@
 /**
  * Render every variant × placement to PNG.
  *
- *   node render.mjs --campaign ./campaign.json [--brand sparehand] [--out ./out]
+ *   node render.mjs --campaign ./campaign.json --brand <name|path> [--out ./out]
  *                   [--sizes meta-1x1,story-9x16] [--variants a,b]
  *
  * Chromium rather than an image model or a canvas library: real font rendering
@@ -21,12 +21,22 @@ function arg(name, fallback) {
 
 const campaignPath = arg("campaign");
 if (!campaignPath) {
-  console.error("Usage: node render.mjs --campaign ./campaign.json [--brand sparehand] [--out ./out]");
+  console.error("Usage: node render.mjs --campaign ./campaign.json --brand <name|path> [--out ./out]");
   process.exit(1);
 }
 
 const campaign = JSON.parse(readFileSync(resolve(campaignPath), "utf8"));
-const brand = loadBrand(arg("brand", campaign.brand || "sparehand"));
+const brandRef = arg("brand", campaign.brand);
+if (!brandRef) {
+  console.error(
+    'No brand. Pass --brand <name|path/to/brand.json>, or set "brand" in the campaign file.\n' +
+      "There is deliberately no default: rendering against the wrong palette produces a full set of\n" +
+      "files that look finished and are all unusable. brands/example.json is a template to fill in,\n" +
+      "and scripts/extract-brand.mjs can propose one from a website.",
+  );
+  process.exit(1);
+}
+const brand = loadBrand(brandRef);
 const OUT = resolve(arg("out", campaign.out || "./out"));
 mkdirSync(OUT, { recursive: true });
 
