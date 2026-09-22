@@ -5,7 +5,7 @@ Plugins for consulting and client delivery work.
 ## Install
 
 ```
-/plugin marketplace add msnimbal/sparehand-skills
+/plugin marketplace add msnimbal/sparehandai
 /plugin install requirements-to-proposal@sparehand
 ```
 

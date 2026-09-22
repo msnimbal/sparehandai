@@ -5,7 +5,7 @@ Turns whatever a client actually gave you — a rambling discovery call, a Whats
 ## Install
 
 ```
-/plugin marketplace add msnimbal/sparehand-skills
+/plugin marketplace add msnimbal/sparehandai
 /plugin install requirements-to-proposal@sparehand
 ```
 

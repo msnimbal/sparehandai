@@ -5,8 +5,8 @@
   "author": {
     "name": "SpareHand AI"
   },
-  "homepage": "https://github.com/msnimbal/sparehand-skills/tree/main/plugins/requirements-to-proposal",
-  "repository": "https://github.com/msnimbal/sparehand-skills",
+  "homepage": "https://github.com/msnimbal/sparehandai/tree/main/plugins/requirements-to-proposal",
+  "repository": "https://github.com/msnimbal/sparehandai",
   "license": "MIT",
   "keywords": [
     "proposal",
