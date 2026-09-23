@@ -25,6 +25,8 @@ import { planScrim, meanRGB } from "./lib/scrim.mjs";
 const FPS = 25;
 /** Verdicts good enough to put on screen. "too-soft" and "wrong-shape" never are. */
 const USABLE = new Set(["ok", "marginal"]);
+/** Extensions in an explicit files list that are footage, not stills. */
+const VIDEO_EXT = /\.(mp4|mov|webm|m4v)$/i;
 
 /**
  * @param {object} o
@@ -165,7 +167,7 @@ function choosePool({ manifest, inventory, size, note }) {
 
   if (Array.isArray(files) && files.length) {
     note(`${size}: using the ${files.length} background file(s) named in the manifest.`);
-    return { tier: 0, tierName: "local", kind: "given", pick: (i) => ({ source: "file", file: files[i % files.length] }) };
+    return { tier: 0, tierName: "local", kind: "given", pick: (i) => givenFile(files[i % files.length]) };
   }
 
   const fit = (inventory?.assets ?? []).filter(
@@ -198,6 +200,20 @@ function choosePool({ manifest, inventory, size, note }) {
     tier: 0, tierName: "local", kind: "generated",
     pick: (i) => ({ source: "generated", generator: gen, seed: i + 1 }),
   };
+}
+
+/**
+ * One entry of `background.files`: a path, or `{ file, start }`.
+ *
+ * Video becomes a clip so it is cut rather than looped as a still. Each clip
+ * starts at 0 (or its own `start`): an explicit list names one moment per
+ * slide, unlike an inventory asset reused across slides, which assemble.mjs
+ * offsets so every slide reads a different part of the same footage.
+ */
+function givenFile(entry) {
+  const { file, start } = typeof entry === "string" ? { file: entry } : entry;
+  if (VIDEO_EXT.test(file)) return { source: "clip", file, start: Number(start ?? 0) };
+  return { source: "file", file };
 }
 
 function motionFor(src, manifest, note) {
