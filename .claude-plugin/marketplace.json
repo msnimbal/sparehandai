@@ -54,7 +54,7 @@
     {
       "name": "ad-motionify",
       "description": "Turn finished ad copy into motion \u2014 composite ad-creative's copy layers over real footage or procedurally generated brand-exact plates, add drift or a wet-pigment warp, and lay a synthesised bed underneath. No image or video model required.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "./plugins/ad-motionify",
       "author": {
         "name": "SpareHand AI"
