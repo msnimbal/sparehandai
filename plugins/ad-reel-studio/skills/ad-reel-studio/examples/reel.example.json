@@ -1,0 +1,85 @@
+{
+  "name": "oct31-anyone",
+  "layers": "./layers",
+  "beats": "./audio/beats.json",
+  "music": {
+    "file": "./audio/music.mp3",
+    "lufs": -24
+  },
+  "transition": {
+    "type": "smoothleft",
+    "duration": 0.4
+  },
+  "shots": [
+    {
+      "src": "clips/c1.mp4",
+      "layer": 1
+    },
+    {
+      "src": "clips/c2.mp4",
+      "from": 1.4,
+      "layer": 2,
+      "at": "phrase:3"
+    },
+    {
+      "src": "clips/c3.mp4",
+      "from": 0.6,
+      "layer": 3,
+      "at": "phrase:4"
+    },
+    {
+      "src": "clips/c4.mp4",
+      "from": 0.6,
+      "layer": 4,
+      "at": "phrase:5"
+    },
+    {
+      "src": "clips/c5.mp4",
+      "from": 0.2,
+      "layer": 5,
+      "at": "phrase:6"
+    },
+    {
+      "grid": [
+        {
+          "src": "clips/c1.mp4",
+          "focus": [
+            540,
+            1050
+          ]
+        },
+        {
+          "src": "clips/c2.mp4",
+          "focus": [
+            540,
+            620
+          ]
+        },
+        {
+          "src": "clips/c3.mp4",
+          "focus": [
+            560,
+            900
+          ]
+        },
+        {
+          "src": "clips/c4.mp4",
+          "focus": [
+            540,
+            800
+          ]
+        }
+      ],
+      "layer": 6,
+      "at": "phrase:8",
+      "transition": "circleopen"
+    },
+    {
+      "card": true,
+      "layer": 7,
+      "at": "phrase:9",
+      "transition": "fade"
+    }
+  ],
+  "approved": false
+}

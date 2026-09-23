@@ -1,0 +1,9 @@
+{
+  "name": "ad-reel-studio",
+  "private": true,
+  "type": "module",
+  "description": "Voice-led reel assembler for the ad-reel-studio skill. No dependencies: node and ffmpeg are the whole list.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}
