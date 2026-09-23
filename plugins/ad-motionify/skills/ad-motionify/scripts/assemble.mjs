@@ -71,11 +71,12 @@ function backgroundFor({ slide, render, brand, work, index }) {
 
   if (bg.source === "clip") {
     // Boomerang once per source so a short clip can fill any duration with an
-    // invisible loop point, then read a different moment for each slide.
+    // invisible loop point. A start fixed in the plan (explicit files) wins;
+    // otherwise read a different moment of the shared source for each slide.
     const loopSrc = join(work, `loop-${basename(bg.file).replace(/\W+/g, "-")}.mp4`);
     if (!existsSync(loopSrc)) boomerang({ src: bg.file, out: loopSrc, stream: "v" });
     const len = durationOf(loopSrc) || secs;
-    return clipSegment({ src: bg.file, loopSrc, w, h, seconds: secs, fps, start: (index * secs) % len, out: clip });
+    return clipSegment({ src: bg.file, loopSrc, w, h, seconds: secs, fps, start: bg.start ?? (index * secs) % len, out: clip });
   }
 
   // A real still.

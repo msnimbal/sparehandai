@@ -128,3 +128,38 @@ test("audio defaults to a bed at bed level, and honours none", () => {
   const silent = run({ seconds: [13], audio: { kind: "none" } }, { assets: [], counts: { usable: 0 } });
   assert.equal(silent.renders[0].audio.kind, "none");
 });
+
+test("an explicit files list routes video to clips and images to stills", () => {
+  const t = run({
+    seconds: [13],
+    background: { kind: "files", motion: "none", files: ["./cuts/a.mp4", "./cuts/card.png", "./cuts/b.MOV"] },
+  }, { assets: [], counts: { usable: 0 } });
+  const [a, card, b] = t.renders[0].slides;
+  assert.equal(a.background.source, "clip");
+  assert.equal(a.background.file, "./cuts/a.mp4");
+  assert.equal(a.motion.kind, "clip");
+  assert.equal(card.background.source, "file");
+  assert.equal(card.background.start, undefined);
+  assert.equal(card.motion.kind, "none");
+  assert.equal(b.background.source, "clip", "extension match is case-insensitive");
+});
+
+test("every video extension named in the manifest docs is treated as a clip", () => {
+  for (const ext of ["mp4", "mov", "webm", "m4v"]) {
+    const t = run({ seconds: [13], background: { kind: "files", files: [`./x.${ext}`] } },
+      { assets: [], counts: { usable: 0 } });
+    assert.equal(t.renders[0].slides[0].background.source, "clip", ext);
+  }
+});
+
+test("each clip in a files list starts at 0 unless the entry gives its own start", () => {
+  const t = run({
+    seconds: [13],
+    background: { kind: "files", files: ["./a.mp4", { file: "./b.mp4", start: 2.5 }, { file: "./c.png" }] },
+  }, { assets: [], counts: { usable: 0 } });
+  const [a, b, c] = t.renders[0].slides;
+  assert.equal(a.background.start, 0);
+  assert.equal(b.background.start, 2.5);
+  assert.equal(c.background.source, "file");
+  assert.equal(c.background.file, "./c.png");
+});

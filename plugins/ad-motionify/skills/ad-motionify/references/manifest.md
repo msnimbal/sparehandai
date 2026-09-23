@@ -61,6 +61,23 @@ Nothing downstream knows or cares that they were paid for.
 - `generated` — always generate.
 - `files` — use `background.files`, an explicit list, cycled across slides.
 
+**`files`** — for `kind: "files"`. Each entry is a path, or `{ "file": ..., "start": ... }`.
+Entries ending `.mp4`, `.mov`, `.webm` or `.m4v` (any case) are footage: they are cut as clips and
+keep their own motion, whatever `motion` says. Anything else is a still and gets `motion`.
+
+Each clip starts at 0 seconds, because an explicit list names one moment per slide. To open a slide
+further into its footage, give that entry a `start` in seconds:
+
+```json
+"files": [
+  "./cuts/s1-bag-lean.mp4",
+  "./cuts/card-navy.png",
+  { "file": "./cuts/s3-bag-headdown.mp4", "start": 2.5 }
+]
+```
+
+`start` is ignored on stills. A clip shorter than its slide is boomeranged, so it never freezes.
+
 **`generator`** — `wash`, `phyllotaxis`, `flow`, `rings`, `grid`, `noise`. Default `wash`.
 
 **`motion`** — `warp`, `kenburns`, `none`. Default `warp`. A real photograph is drifted rather than
