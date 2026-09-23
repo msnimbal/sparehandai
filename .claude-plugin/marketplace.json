@@ -72,6 +72,29 @@
         "b-roll",
         "brand"
       ]
+    },
+    {
+      "name": "ad-reel-studio",
+      "description": "A voiced short-form video ad from hook to MP4 \u2014 hook research, stock images, vectors, video, music and SFX, animated stills, an AI voiceover, and a cut timed to the voice, with ad-creative's exact copy and legal line on every frame.",
+      "version": "0.1.0",
+      "source": "./plugins/ad-reel-studio",
+      "author": {
+        "name": "SpareHand AI"
+      },
+      "homepage": "https://github.com/msnimbal/sparehandai/tree/main/plugins/ad-reel-studio",
+      "repository": "https://github.com/msnimbal/sparehandai",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "advertising",
+        "video",
+        "reels",
+        "voiceover",
+        "animation",
+        "hooks",
+        "stock-media",
+        "ffmpeg"
+      ]
     }
   ]
 }

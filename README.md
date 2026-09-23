@@ -14,6 +14,9 @@ Plugins for consulting and client delivery work.
 | Plugin | Purpose |
 | --- | --- |
 | [`requirements-to-proposal`](plugins/requirements-to-proposal/) | Turn raw client requirements — meeting notes, chat threads, voice recordings, emails, documents — into a scope document, a PDF, and matching CRM records that stay in sync through every revision. |
+| [`ad-creative`](plugins/ad-creative/) | On-brand statics for every Meta and Google placement plus a silent slide reel, rendered from HTML so colour, type and the legal line are exact. |
+| [`ad-motionify`](plugins/ad-motionify/) | Motion for finished ad copy: real footage or brand-exact generated plates behind ad-creative's layers, plus a bed. No paid model needed. |
+| [`ad-reel-studio`](plugins/ad-reel-studio/) | A voiced short-form video ad from hook to MP4: hooks, stock media, animated stills, AI voiceover, and a cut timed to the voice. Chains ad-creative and ad-motionify. |
 
 ## Tool-agnostic by design
 
